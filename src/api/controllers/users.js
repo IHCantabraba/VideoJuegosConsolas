@@ -18,9 +18,11 @@ const register = async (req, res, next) => {
       nombreUsuario: req.body.nombreUsuario,
       contraseña: req.body.contraseña,
       añoNacimiento: req.body.añoNacimiento,
-      rol: req.body.rol,
+      rol: 'user' /* evitar que alguien se logue como admin */,
       imagenPerfil: req.body.imagenPerfil
     })
+    /* restringir rol a machete */
+    /* user.rol = 'user' */
     /* comprobar si existe ya ese usuario */
     const userDuplicated = await User.findOne({
       nombreUsuario: req.body.nombreUsuario
@@ -29,7 +31,9 @@ const register = async (req, res, next) => {
     if (userDuplicated) {
       return res
         .status(200)
-        .json(`UserNAme already exists ${req.body.nombreUsuario}`)
+        .json(
+          `UserName ${req.body.nombreUsuario} already exists. Try with another. `
+        )
     }
     const userSaved = await user.save()
     return res.status(200).json(`Successfully register user: ${userSaved}`)
@@ -42,14 +46,16 @@ const login = async (req, res, next) => {
   try {
     const { nombreUsuario, contraseña } = req.body
     const user = await User.findOne({ nombreUsuario })
+    /* si noe xiste el usuario */
     if (!user) {
       return res.status(400).json('User or Password Incorrect')
     }
+    /* si existe usuario, comprobar contraseña */
     if (bcrypt.compareSync(contraseña, user.contraseña)) {
       const token = generateToken(user._id, user.rol)
       return res.status(200).json({ token, user })
     } else {
-      return res.status(400).json('user or password Incorrect')
+      return res.status(400).json(' Incorrect password')
     }
   } catch (error) {
     return res.status(400).json(`Error in login proccess: ${error}`)

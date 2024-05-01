@@ -8,7 +8,7 @@ const {
 
 const consolaRouter = require('express').Router()
 
-consolaRouter.get('/', [isAdmin], getConsolas)
+consolaRouter.get('/', getConsolas)
 consolaRouter.post('/', postConsola)
 consolaRouter.put('/:id', updateConsola)
 consolaRouter.delete('/:id', [isAdmin], deleteConsola)

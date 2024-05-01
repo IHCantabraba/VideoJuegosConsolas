@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
 
-const verifyToken = async (token) => {
-  const response = jwt.verify(token, process.env.JWT_SECRET)
-  return response
+const verifyToken = (token) => {
+  return jwt.verify(token, process.env.JWT_SECRET)
 }
 
 const generateToken = (id, rol) => {
@@ -11,7 +10,7 @@ const generateToken = (id, rol) => {
     rol: rol
   }
   return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '10h'
+    expiresIn: '30d'
   })
 }
 
