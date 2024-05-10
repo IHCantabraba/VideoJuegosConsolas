@@ -27,10 +27,7 @@ const updateVideoJuego = async (req, res, next) => {
     newVideoJuego._id = id
     const videoJuegoUpdated = await VideoJuego.findByIdAndUpdate(
       id,
-      newVideoJuego,
-      {
-        new: true
-      }
+      newVideoJuego
     ) /* new:true hace que videoJuegoUpdated devuelva en nuevo y no el antiguo que devuelve por defecto*/
     return res
       .status(200)

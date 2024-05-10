@@ -29,9 +29,10 @@ const updateConsola = async (req, res, next) => {
     const { id } = req.params
     const newConsola = new Consola(req.body)
     newConsola._id = id
-    const consolaUpdated = await Consola.findByIdAndUpdate(id, newConsola, {
-      new: true
-    }) /* new:true hace que consolaupdated devuelva en nuevo y no el antiguo que devuelve por defecto*/
+    const consolaUpdated = await Consola.findByIdAndUpdate(
+      id,
+      newConsola
+    ) /* new:true hace que consolaupdated devuelva en nuevo y no el antiguo que devuelve por defecto*/
     return res
       .status(200)
       .json(`successfully updated consola ${consolaUpdated}`)

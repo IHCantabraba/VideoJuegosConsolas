@@ -8,9 +8,9 @@ const {
 
 const consolaRouter = require('express').Router()
 
-consolaRouter.get('/', getConsolas)
-consolaRouter.post('/', postConsola)
-consolaRouter.put('/:id', updateConsola)
+consolaRouter.get('/', [isAuth], getConsolas)
+consolaRouter.post('/', [isAuth], postConsola)
+consolaRouter.put('/:id', [isAuth], updateConsola)
 consolaRouter.delete('/:id', [isAdmin], deleteConsola)
 
 module.exports = consolaRouter

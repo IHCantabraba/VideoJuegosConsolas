@@ -7,8 +7,8 @@ const {
 } = require('../controllers/videojuegos')
 
 const videoJuegoRouter = require('express').Router()
-videoJuegoRouter.get('/', getVideoJuegos)
-videoJuegoRouter.post('/', postVideoJuego)
-videoJuegoRouter.put('/:id', updateVideoJuego)
+videoJuegoRouter.get('/', [isAuth], getVideoJuegos)
+videoJuegoRouter.post('/', [isAuth], postVideoJuego)
+videoJuegoRouter.put('/:id', [isAuth], updateVideoJuego)
 videoJuegoRouter.delete('/:id', [isAdmin], deleteVideoJuego)
 module.exports = videoJuegoRouter
