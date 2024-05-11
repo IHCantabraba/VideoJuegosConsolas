@@ -2,7 +2,7 @@ const VideoJuego = require('../models/videojuegos')
 /* GET controller */
 const getVideoJuegos = async (req, res, next) => {
   try {
-    const allVideoJuegos = await VideoJuego.find()
+    const allVideoJuegos = await VideoJuego.find().populate('consola')
     return res.status(200).json(allVideoJuegos)
   } catch (error) {
     return res.status(400).json(`Error while reading VideoJuegos: ${error}`)
@@ -24,6 +24,16 @@ const updateVideoJuego = async (req, res, next) => {
   try {
     const { id } = req.params
     const newVideoJuego = new VideoJuego(req.body)
+    let CurrentConsolas = await VideoJuego.find({ id })
+
+    /* si no se le pasan consolas */
+    if (!req.body.consola) {
+      console.log(' no se pasan consolas')
+      newVideoJuego.consola = CurrentConsolas.consola
+    } else {
+      console.log(req.body.consola)
+      newVideoJuego.consola += req.body.consola
+    }
     newVideoJuego._id = id
     const videoJuegoUpdated = await VideoJuego.findByIdAndUpdate(
       id,

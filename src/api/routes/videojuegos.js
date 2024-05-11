@@ -1,4 +1,4 @@
-const { isAdmin } = require('../../middlewares/auth.middleware')
+const { isAdmin, isAuth } = require('../../middlewares/auth.middleware')
 const {
   getVideoJuegos,
   postVideoJuego,

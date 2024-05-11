@@ -11,6 +11,7 @@ const getConsolas = async (req, res, next) => {
 const postConsola = async (req, res, next) => {
   try {
     const newConsola = new Consola(req.body)
+
     const savedConsola = newConsola.save()
     return res
       .status(200)
@@ -28,6 +29,18 @@ const updateConsola = async (req, res, next) => {
   try {
     const { id } = req.params
     const newConsola = new Consola(req.body)
+    let CurrentGames = await Consola.find({ id })
+
+    /* si no s ele pasan videojuegos */
+    if (!req.body.videojuegos) {
+      console.log('no se pasan videojuegos')
+      newConsola.videojuegos = CurrentGames.videojuegos
+    } else {
+      /* si se le pasan videojuegos */
+      console.log(req.body.videojuegos)
+      newConsola.videojuegos += req.body.videojuegos
+    }
+
     newConsola._id = id
     const consolaUpdated = await Consola.findByIdAndUpdate(
       id,
