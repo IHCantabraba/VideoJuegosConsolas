@@ -1,3 +1,4 @@
+const { set } = require('mongoose')
 const Consola = require('../models/consolas')
 /* GET controller */
 const getConsolas = async (req, res, next) => {
@@ -29,23 +30,39 @@ const updateConsola = async (req, res, next) => {
   try {
     const { id } = req.params
     const newConsola = new Consola(req.body)
-    let CurrentGames = await Consola.find({ id })
+    let CurrentGames = await Consola.findById(id)
+    const oldVideoJuegos = CurrentGames.videojuegos
+    const newVideoJuegos = newConsola.videojuegos
 
-    /* si no s ele pasan videojuegos */
-    if (!req.body.videojuegos) {
-      console.log('no se pasan videojuegos')
-      newConsola.videojuegos = CurrentGames.videojuegos
-    } else {
-      /* si se le pasan videojuegos */
-      console.log(req.body.videojuegos)
-      newConsola.videojuegos += req.body.videojuegos
+    /* Seems it does not Work */
+    // let mergedGames = [...oldVideoJuegos, ...newVideoJuegos]
+    // let gamesSet = [...new Set(mergedGames)]
+    // console.log(`gameSet is: ${gamesSet}`)
+    // newConsola.videojuegos = mergedGames
+
+    /* Seems it does not Work */
+    // let filterGames = mergedGames.filter(
+    //   (value, index) => mergedGames.indexOf(value) === index
+    // )
+    // console.log(`filter games are: ${filterGames}`)
+    // newConsola.videojuegos = filterGames
+    /* it works */
+    for (const game of newVideoJuegos) {
+      if (oldVideoJuegos.includes(game)) {
+        console.log('already existes')
+      } else {
+        console.log('does not exist including...')
+        oldVideoJuegos.push(game)
+      }
     }
+    console.log(`Pruebas ${oldVideoJuegos}`)
+
+    newConsola.videojuegos = oldVideoJuegos
 
     newConsola._id = id
-    const consolaUpdated = await Consola.findByIdAndUpdate(
-      id,
-      newConsola
-    ) /* new:true hace que consolaupdated devuelva en nuevo y no el antiguo que devuelve por defecto*/
+    const consolaUpdated = await Consola.findByIdAndUpdate(id, newConsola, {
+      new: true
+    }) /* new:true hace que consolaupdated devuelva en nuevo y no el antiguo que devuelve por defecto*/
     return res
       .status(200)
       .json(`successfully updated consola ${consolaUpdated}`)
